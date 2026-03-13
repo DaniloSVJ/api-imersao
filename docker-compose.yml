@@ -1,0 +1,40 @@
+services:
+  # api:
+  #   build: .
+  #   container_name: api_app
+  #   ports:
+  #     - '3000:3000'
+  #   depends_on:
+  #     - mysql
+  #   environment:
+  #     DATABASE_URL: mysql://root:root@mysql:3306/app
+  #   restart: always
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql_db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: imersao_db
+      MYSQL_USER: app
+      MYSQL_PASSWORD: 123456
+    ports:
+      - '3306:3306'
+    volumes:
+      - mysql_data:/var/lib/mysql
+    restart: always
+  api:
+    build: . # Indica que o Dockerfile está na mesma pasta
+    container_name: imersao_api
+    ports:
+      - '3000:3000' # Mapeia a porta do container para o seu Ubuntu
+    depends_on:
+      - mysql # Garante que o banco suba antes da API 🚀
+    environment:
+      # Estrutura: mysql://USUARIO:SENHA@SERVICO:PORTA/BANCO
+      DATABASE_URL: 'mysql://app:123456@mysql:3306/imersao_db'
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+volumes:
+  mysql_data:
