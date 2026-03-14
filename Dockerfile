@@ -4,13 +4,13 @@ WORKDIR /app
 
 COPY package*.json ./
 
-RUN npm install
+RUN yarn install
 
 COPY . .
 
 RUN npx prisma generate
-RUN npm run build
+RUN yarn build
 
 EXPOSE 3000
 
-CMD sh -c "npx prisma migrate deploy && node dist/main.js"
+CMD ["yarn", "run", "start:prod"]
